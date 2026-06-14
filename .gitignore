@@ -1,0 +1,19 @@
+# --- Node / Angular (Crucial) ---
+node_modules/
+.angular/
+dist/
+.npm/
+package-lock.json
+
+# --- Java / Maven ---
+target/
+*.class
+*.jar
+*.war
+*.zip
+
+# --- IDEs & OS ---
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

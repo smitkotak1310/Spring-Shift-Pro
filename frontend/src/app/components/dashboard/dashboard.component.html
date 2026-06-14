@@ -1,0 +1,84 @@
+<div class="glass-shell">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo">SHIFT<span class="cyan">PRO</span></div>
+    <div class="ai-status">
+      <div class="dot"></div> AI ENGINE ACTIVE
+    </div>
+    
+    <div class="stats-panel" *ngIf="analysisResult">
+      <div class="stat-item">
+        <label>ESTIMATED EFFORT</label>
+        <div class="val">{{ (analysisResult.totalIssues * 1.8).toFixed(1) }} Hours</div>
+      </div>
+      <div class="stat-item">
+        <label>RISK VECTORS</label>
+        <div class="val" [style.color]="analysisResult.readinessScore < 60 ? '#ff4d4d' : '#00ffcc'">
+          {{ analysisResult.readinessScore < 60 ? 'HIGH' : 'LOW' }}
+        </div>
+      </div>
+    </div>
+    
+    <button *ngIf="analysisResult" class="reset-btn" (click)="analysisResult = null">NEW ANALYSIS</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Hero Upload State -->
+    <div class="hero-zone" *ngIf="!analysisResult">
+      <h1 class="gradient-title">Modernize Your Legacy.</h1>
+      <p class="subtitle">Upload project metadata to trigger AST-based dependency mapping.</p>
+      
+      <div class="glass-drop-zone" (click)="f.click()">
+        <mat-icon class="pulse-icon">auto_fix_high</mat-icon>
+        <div class="drop-text">SCAN POM.XML</div>
+        <input type="file" #f (change)="onFileSelected($event)" hidden accept=".xml">
+      </div>
+    </div>
+
+    <!-- Analysis Results -->
+    <div class="results-view" *ngIf="analysisResult">
+      <div class="top-row">
+        <div class="glass-card gauge-box">
+          <ngx-charts-gauge
+            [scheme]="'vivid'"
+            [results]="[{'name': 'Score', 'value': analysisResult.readinessScore}]"
+            [min]="0" [max]="100" [units]="'% READY'">
+          </ngx-charts-gauge>
+        </div>
+
+        <div class="glass-card action-box">
+          <h3>INTELLIGENCE INSIGHTS</h3>
+          <p>Found {{ analysisResult.totalIssues }} modernization points. Your codebase requires a shift to Jakarta EE namespaces.</p>
+          <button mat-flat-button class="glow-btn" (click)="downloadReport()">
+            <mat-icon>file_download</mat-icon> DOWNLOAD PDF BLUEPRINT
+          </button>
+        </div>
+      </div>
+
+      <div class="roadmap-zone">
+        <div class="glass-card">
+          <h2 class="section-title">TRANSFORMATION ROADMAP</h2>
+          <div class="roadmap-grid">
+            <div class="roadmap-header">
+              <span>Modernization Task</span>
+              <span>AI Code Delta</span>
+            </div>
+            
+            <div class="roadmap-row" *ngFor="let task of analysisResult.roadmap">
+              <div class="task-info">
+                <span class="badge" [class.breaking]="task.impact === 'Breaking'">{{ task.impact }}</span>
+                <h3>{{ task.category }}</h3>
+                <p>{{ task.description }}</p>
+                <small>{{ task.suggestion }}</small>
+              </div>
+              <div class="code-delta">
+                <pre><code>{{ task.codeSnippet }}</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
